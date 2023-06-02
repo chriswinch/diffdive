@@ -1,31 +1,31 @@
-# name: Publish
+name: Publish
 
-# on:
-#   push:
-#     branches:
-#       - main
+on:
+  push:
+    branches:
+      - main
 
-# jobs:
-#   build_and_publish:
-#     runs-on: ubuntu-latest
+jobs:
+  build_and_publish:
+    runs-on: ubuntu-latest
 
-#     steps:
-#       - name: Checkout repo
-#         uses: actions/checkout@v3
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-#       - name: Setup node
-#         uses: actions/setup-node@v3
-#         with:
-#           node-version: 18
-#           registry-url: https://registry.npmjs.org/
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          registry-url: https://registry.npmjs.org/
 
-#       - name: install dependencies
-#         run: npm ci
+      - name: install dependencies
+        run: npm ci
 
-#       - name: Build
-#         run: npm run build
+      - name: Build
+        run: npm run build
 
-#       - name: Publish
-#         run: npm publish --access public
-#         env:
-#           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
