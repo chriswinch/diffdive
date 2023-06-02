@@ -48,15 +48,20 @@ async function getCurrentBranch() {
 
 async function getDiff(defaultBranch: string, currentBranch: string) {
   try {
-    const command = `git diff ${currentBranch.trim()}...${defaultBranch.trim()}`;
-    return await runCommand(command);
+    const sameBranch = defaultBranch.trim() === currentBranch.trim();
+    const command = sameBranch ? `git diff` : `git diff ${currentBranch.trim()}...${defaultBranch.trim()}`;
+    const diff = await runCommand(command);
+    if (!diff) {
+      console.log(chalk.red("No changes to review\n"));
+    }
+    return diff || "";
   } catch (error) {
     console.error(chalk.red("Failed to get diff"), error);
     throw error;
   }
 }
 
-async function getCodeReview(diff: string, model = "gpt-3.5-turbo") {
+async function getCodeReview(diff: string, model = "gpt-4") {
   try {
     console.log(chalk.yellow(diff));
     console.log(chalk.green("Getting code review..."));
@@ -92,9 +97,10 @@ async function main() {
     const defaultBranch = await getDefaultBranch();
     const currentBranch = await getCurrentBranch();
     const diff = await getDiff(defaultBranch, currentBranch);
-    const codeReview = await getCodeReview(diff);
-
-    console.log(chalk.redBright(codeReview));
+    if (diff) {
+      const codeReview = await getCodeReview(diff);
+      console.log(chalk.redBright(codeReview));
+    }
   } catch (error) {
     console.error(chalk.red("Failed to get code review for changes"), error);
   }
