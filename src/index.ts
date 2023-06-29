@@ -66,7 +66,25 @@ async function getCodeReview(diff: string, model = "gpt-4") {
     console.log(chalk.yellow(diff));
     console.log(chalk.green("Getting code review..."));
 
-    const content = `${diff}\nGive me a code review based on the git diff above. Be as critical as possible.`;
+    const content = `${diff}
+    Give me a code review based on the git diff above. Be as critical as possible. Format your review as follows (JSON):
+    const section = {
+        "score": 0-10,
+        "feedback: "",
+        "suggestions: []
+    }
+    {
+      "title: "",
+      "description": "",
+      "suggested pr title": "",
+      "code quality": section,
+      "readability": section,
+      "maintainability": section,
+      "performance": section,
+      "security": section,
+      "accessibility": section,
+    }
+    `;
 
     const { data } = await axios.post(
       "https://api.openai.com/v1/chat/completions",
