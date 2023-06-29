@@ -125,5 +125,5 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error(chalk.red("oops, something went"), error.message);
+  console.error(chalk.red("oops, something went wrong!"), error.message);
 });
