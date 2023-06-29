@@ -109,25 +109,21 @@ async function getCodeReview(diff: string, model = "gpt-4") {
 }
 
 async function main() {
-  try {
-    const isGitRepo = await runCommand("git rev-parse --is-inside-work-tree");
+  const isGitRepo = await runCommand("git rev-parse --is-inside-work-tree");
 
-    if (isGitRepo !== "true") {
-      throw new Error("Not a git repository");
-    }
+  if (isGitRepo !== "true") {
+    throw new Error("Not a git repository");
+  }
 
-    const defaultBranch = await getDefaultBranch();
-    const currentBranch = await getCurrentBranch();
-    const diff = await getDiff(defaultBranch, currentBranch);
-    if (diff) {
-      const codeReview = await getCodeReview(diff);
-      console.log(chalk.redBright(codeReview));
-    }
-  } catch (error) {
-    console.error(chalk.red("Failed to get code review for changes"), error);
+  const defaultBranch = await getDefaultBranch();
+  const currentBranch = await getCurrentBranch();
+  const diff = await getDiff(defaultBranch, currentBranch);
+  if (diff) {
+    const codeReview = await getCodeReview(diff);
+    console.log(chalk.redBright(codeReview));
   }
 }
 
 main().catch((error) => {
-  console.error(chalk.red("Failed to get code review for changes"), error);
+  console.error(chalk.red("oops, something went"), error.message);
 });
