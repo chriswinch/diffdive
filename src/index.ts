@@ -2,7 +2,7 @@
 
 import dotenv from "dotenv";
 import { exec } from "child_process";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import chalk from "chalk";
 
 dotenv.config();
@@ -99,7 +99,11 @@ async function getCodeReview(diff: string, model = "gpt-4") {
 
     return data.choices[0].message.content;
   } catch (error) {
-    console.error(chalk.red("Failed to get code review"), error);
+    if (error instanceof AxiosError) {
+      console.error(chalk.red("Failed to get code review"), error.response?.data.error);
+    } else {
+      console.error(chalk.red("Failed to get code review"), error);
+    }
     throw error;
   }
 }
